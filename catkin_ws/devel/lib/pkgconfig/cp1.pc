@@ -1,0 +1,8 @@
+prefix=/home/patrick/Mobile_Robots/catkin_ws/devel
+
+Name: cp1
+Description: Description of cp1
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
