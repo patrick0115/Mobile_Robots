@@ -389,6 +389,19 @@ rosgraph_msgs_generate_messages_lisp/fast:
 .PHONY : rosgraph_msgs_generate_messages_lisp/fast
 
 #=============================================================================
+# Target rules for targets named cp1
+
+# Build rule for target.
+cp1: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 cp1
+.PHONY : cp1
+
+# fast build rule for target.
+cp1/fast:
+	$(MAKE) -f cp1/CMakeFiles/cp1.dir/build.make cp1/CMakeFiles/cp1.dir/build
+.PHONY : cp1/fast
+
+#=============================================================================
 # Target rules for targets named std_msgs_generate_messages_cpp
 
 # Build rule for target.
@@ -509,6 +522,7 @@ help:
 	@echo "... roscpp_generate_messages_cpp"
 	@echo "... rosgraph_msgs_generate_messages_eus"
 	@echo "... rosgraph_msgs_generate_messages_lisp"
+	@echo "... cp1"
 	@echo "... std_msgs_generate_messages_cpp"
 	@echo "... rosgraph_msgs_generate_messages_nodejs"
 	@echo "... rosgraph_msgs_generate_messages_py"

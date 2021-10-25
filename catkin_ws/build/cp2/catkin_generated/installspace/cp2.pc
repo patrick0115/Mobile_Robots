@@ -1,0 +1,8 @@
+prefix=/home/patrick/Mobile_Robots/catkin_ws/install
+
+Name: cp2
+Description: Description of cp2
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
