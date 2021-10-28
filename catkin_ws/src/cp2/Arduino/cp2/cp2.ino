@@ -10,8 +10,8 @@
 
 ros::NodeHandle nh;  //manages an internal reference count
 
-int pwm_r=0;
-int pwm_l=0;
+int input_value_R=0;
+int input_value_L=0;
 
 void cb_r(const std_msgs::Int16& msg){
   input_value_R = msg.data;
@@ -27,7 +27,7 @@ ros::Subscriber<std_msgs::Int16> sub_L("pwm_value_L", &cb_l);
 void setup() {
   nh.initNode();
   nh.subscribe(sub_R);
-  nh.subscribe(sub_L;
+  nh.subscribe(sub_L);
   pinMode(OUTPUT, in1);
   pinMode(OUTPUT, in2);
   pinMode(OUTPUT, in3);
@@ -38,45 +38,45 @@ void setup() {
 }
 
 void loop() {
-  if(pwm_r >=0 and pwm_l >= 0){
+  if(input_value_R >=0 and input_value_L >= 0){
     digitalWrite(in1,HIGH);
     digitalWrite(in2,LOW);
     digitalWrite(in3,HIGH);
     digitalWrite(in4,LOW);
-    analogWrite(ENA,pwm_l);
-    analogWrite(ENB,pwm_r);
+    analogWrite(ENA,input_value_L );
+    analogWrite(ENB,input_value_R);
   }
-  else if(pwm_r >=0 and pwm_l <= 0){
+  else if(input_value_R >=0 and input_value_L <= 0){
     digitalWrite(in1,HIGH);
     digitalWrite(in2,LOW);
     digitalWrite(in3,LOW);
     digitalWrite(in4,HIGH);
-    analogWrite(ENA,pwm_l);
-    analogWrite(ENB,abs(pwm_r));
+    analogWrite(ENA,input_value_L);
+    analogWrite(ENB,abs(input_value_R));
   }
-  else if(pwm_r <=0 and pwm_l >= 0){
+  else if(input_value_R <=0 and input_value_L >= 0){
     digitalWrite(in1,LOW);
     digitalWrite(in2,HIGH);
     digitalWrite(in3,HIGH);
     digitalWrite(in4,LOW);
-    analogWrite(ENA,abs(pwm_l));
-    analogWrite(ENB,pwm_r );
+    analogWrite(ENA,abs(input_value_L));
+    analogWrite(ENB,input_value_R );
   }
-  else if(pwm_r ==0 and pwm_l == 0){
+  else if(input_value_R ==0 and input_value_L == 0){
     digitalWrite(in1,LOW);
     digitalWrite(in2,LOW);
     digitalWrite(in3,LOW);
     digitalWrite(in4,LOW);
-    analogWrite(ENA,pwm_r);
-    analogWrite(ENB,pwm_l );
+    analogWrite(ENA,input_value_R);
+    analogWrite(ENB,input_value_L );
   }
   else {
     digitalWrite(in1,LOW);
     digitalWrite(in2,HIGH);
     digitalWrite(in3,LOW);
     digitalWrite(in4,HIGH);
-    analogWrite(ENA,pwm_l);
-    analogWrite(ENB,pwm_r);
+    analogWrite(ENA,input_value_L);
+    analogWrite(ENB,input_value_R);
   }  
   nh.spinOnce();
 }
