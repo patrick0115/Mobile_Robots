@@ -17,8 +17,9 @@ def main():
         except ValueError:
             rospy.logerr("Invalid input, set default value 0")
             intput_value_L = 0
-        pub_R.publish(Int16(intput_value_R))
-        pub_L.publish(Int16(intput_value_L))
-        rospy.sleep(3)
-if __name__== "__main__":
+
+    pub_R.publish(Int16(intput_value_R))
+    pub_L.publish(Int16(intput_value_L))
+    rospy.sleep(3)
+if __name__=="__main__":
     main()
