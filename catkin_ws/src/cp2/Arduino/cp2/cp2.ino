@@ -5,8 +5,8 @@
 #define in2 5
 #define in3 6
 #define in4 7
-#define ENB 10
-#define ENA 11
+#define ENA 10
+#define ENB 11
 
 ros::NodeHandle nh;  //manages an internal reference count
 
