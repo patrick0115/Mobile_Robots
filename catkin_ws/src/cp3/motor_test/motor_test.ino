@@ -28,7 +28,7 @@ ros::Subscriber<std_msgs::Int16> sub_L("pwm_value_L", &cb_l);
 
 void setup() {
   Serial.begin(9600);
-  nh.initNode();
+  //nh.initNode();
   nh.subscribe(sub_R);
   nh.subscribe(sub_L);
   pinMode(r, INPUT);
@@ -42,10 +42,14 @@ void setup() {
 }
 
 void loop() {
-  int a=4;
- // r_value= analogRead(r);
- // Serial.println(r_value,DEC);
-  Serial.println(a);
+  r_value= analogRead(r);
+  Serial.println(r_value,DEC);
+  if(r_value<100){
+    motor(150,150);
+  }
+  else if(r_value>100){
+    motor(0,0);
+  }
   delay(500);
 }
 
