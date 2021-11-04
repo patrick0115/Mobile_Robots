@@ -17,7 +17,7 @@ def main():
     GPIO.setup(touch_pin , GPIO.IN, pull_up_down=GPIO.PUD_UP)
     while not rospy.is_shutdown():
         while True:
-             print GPIO.input(touch_pin)
+             print(GPIO.input(touch_pin))
              print('--------------')
              rospy.sleep(0.5)
 
