@@ -12,19 +12,14 @@ int light_value = 0;
 
 ros::NodeHandle nh;  //manages an internal reference count
 
-int touch_R = 0;
-int touch_L = 0;
+int state = 0;
+
 
 void cb_r(const std_msgs::Int16& msg) {
-  touch_R = msg.data;
-}
-void cb_l(const std_msgs::Int16& msg) {
-  touch_L = msg.data;
+  state= msg.data;
 }
 
-ros::Subscriber<std_msgs::Int16> sub_R("touch_R", &cb_r);
-ros::Subscriber<std_msgs::Int16> sub_L("touch_L", &cb_l);
-
+ros::Subscriber<std_msgs::Int16> sub_R("touch", &cb_r);
 
 void setup() {
   Serial.begin(9600);
@@ -45,13 +40,13 @@ void loop() {
   light_value = analogRead(light);
   Serial.println(light_value, DEC);
   if (light_value < 100) {
-    if (touch_R == 1 || touch_R == 0) {
+    if (state==1) {
       motor(60, 130);
     }
-    else if (touch_R == 0 || touch_R == 1) {
-      motor(60, 130);
+    else if (state==2) {
+      motor(130, 60);
     }
-    else if (touch_R == 1 || touch_R == 1) {
+    else if (state==3) {
       motor(-130, -130);
     }
     else {
