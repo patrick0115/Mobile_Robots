@@ -1,0 +1,8 @@
+prefix=/home/patrick/Mobile_Robots/catkin_ws/devel
+
+Name: cp3
+Description: Description of cp3
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

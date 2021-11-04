@@ -987,6 +987,24 @@ cp2/preinstall:
 .PHONY : cp2/preinstall
 
 #=============================================================================
+# Directory level rules for directory cp3
+
+# Convenience name for "all" pass in the directory.
+cp3/all:
+
+.PHONY : cp3/all
+
+# Convenience name for "clean" pass in the directory.
+cp3/clean:
+
+.PHONY : cp3/clean
+
+# Convenience name for "preinstall" pass in the directory.
+cp3/preinstall:
+
+.PHONY : cp3/preinstall
+
+#=============================================================================
 # Special targets to cleanup operation of make.
 
 # Special rule to run CMake to check the build system integrity.
