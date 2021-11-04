@@ -19,13 +19,17 @@ void cb_r(const std_msgs::Int16& msg) {
   state= msg.data;
 }
 
-ros::Subscriber<std_msgs::Int16> sub_R("touch", &cb_r);
+ros::Subscriber<std_msgs::Int16> sub("touch", &cb_r);
+
+std_msgs::Int16 light_msg;
+ros::Publisher pub_light("light_value", &light_msg);
+
 
 void setup() {
   Serial.begin(9600);
-  //nh.initNode();
-  nh.subscribe(sub_R);
-  nh.subscribe(sub_L);
+  nh.initNode();
+  nh.subscribe(sub);
+  nh.advertise(pub_light);
   pinMode(light, INPUT);
   pinMode(OUTPUT, in1);
   pinMode(OUTPUT, in2);
@@ -39,7 +43,9 @@ void setup() {
 void loop() {
   light_value = analogRead(light);
   Serial.println(light_value, DEC);
-  if (light_value < 100) {
+  light_msg.data = analogRead(light);
+  pub_light.publish( &light_msg );
+  if (light_value > 500) {
     if (state==1) {
       motor(60, 130);
     }
@@ -53,7 +59,7 @@ void loop() {
       motor(64, 64);
     }
   }
-  else if (light_value > 100) {
+  else if (light_value < 100) {
     motor(64, 64);
     if (light_value > 500) {
       motor(0, 0);
