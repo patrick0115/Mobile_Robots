@@ -19,12 +19,14 @@ def main():
     rate = rospy.Rate(1) # 10hz
 
     while not rospy.is_shutdown():
-        if(GPIO.input(touch_L)==1 & GPIO.input(touch_R)==0):
-            state=1 #left
-        elif(GPIO.input(touch_L)==0 & GPIO.input(touch_R)==1):
-            state=2 #right
-        else:
-            state=3 #back
+#        if(GPIO.input(touch_L)==1):
+        state=GPIO.input(touch_B)
+#        elif(GPIO.input(touch_L)==1 & GPIO.input(touch_R)==0):
+#            state=1 #left
+#        elif(GPIO.input(touch_L)==0 & GPIO.input(touch_R)==1):
+#            state=2 #right
+#        else:
+#            state=3 #back
         pub.publish(Int16(state))
         print(state)
         print('--------------')
