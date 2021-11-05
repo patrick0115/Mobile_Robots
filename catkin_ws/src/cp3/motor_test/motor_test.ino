@@ -8,7 +8,7 @@ const int light = A0;
 #define in4 7
 #define ENA 10
 #define ENB 11
-int light_value = 0;
+int light_value = 800;
 
 ros::NodeHandle nh;  //manages an internal reference count
 
@@ -16,7 +16,7 @@ int state = 0;
 
 
 void cb_r(const std_msgs::Int16& msg) {
-  state= msg.data;
+  state = msg.data;
 }
 
 ros::Subscriber<std_msgs::Int16> sub("touch", &cb_r);
@@ -26,7 +26,7 @@ ros::Publisher pub_light("light_value", &light_msg);
 
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(57600);
   nh.initNode();
   nh.subscribe(sub);
   nh.advertise(pub_light);
@@ -41,34 +41,43 @@ void setup() {
 }
 
 void loop() {
+  motor(0, 0);
+/*
   light_value = analogRead(light);
   Serial.println(light_value, DEC);
   light_msg.data = analogRead(light);
   pub_light.publish( &light_msg );
-  if (light_value > 500) {
-    if (state==1) {
-      motor(60, 130);
+*/
+  if (state != 4) {
+    if (state == 2) {
+      motor(130, 80);
+      delay(500);
     }
-    else if (state==2) {
-      motor(130, 60);
+    else if (state == 1) {
+      motor(80, 130);
+      delay(500);
     }
-    else if (state==3) {
+    else if (state == 3) {
       motor(-130, -130);
+      delay(500);
     }
     else {
       motor(64, 64);
+      delay(500);
     }
+
   }
-  else if (light_value < 100) {
-    motor(64, 64);
-    if (light_value > 500) {
-      motor(0, 0);
-    }
+  else if (state == 4) {
+    motor(0, 0);
+    delay(5000);
   }
-  delay(500);
+
+
+  nh.spinOnce();
 }
 
-int motor(int input_value_R, int input_value_L) {
+
+int motor(int input_value_L, int input_value_R) {
   if (input_value_R >= 0 and input_value_L >= 0) {
     digitalWrite(in1, HIGH);
     digitalWrite(in2, LOW);
@@ -98,8 +107,8 @@ int motor(int input_value_R, int input_value_L) {
     digitalWrite(in2, LOW);
     digitalWrite(in3, LOW);
     digitalWrite(in4, LOW);
-    analogWrite(ENA, input_value_R);
-    analogWrite(ENB, input_value_L );
+    analogWrite(ENA, input_value_L);
+    analogWrite(ENB, input_value_R );
   }
   else {
     digitalWrite(in1, LOW);
@@ -109,5 +118,5 @@ int motor(int input_value_R, int input_value_L) {
     analogWrite(ENA, input_value_L);
     analogWrite(ENB, input_value_R);
   }
-  nh.spinOnce();
+
 }
