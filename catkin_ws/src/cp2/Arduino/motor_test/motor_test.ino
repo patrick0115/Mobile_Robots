@@ -1,4 +1,4 @@
-#define in1  4
+#define in1 4
 #define in2 5
 #define in3 6
 #define in4 7
@@ -17,6 +17,7 @@ void setup() {
 
 void loop() {
   f();
+  delay(10); 
 
 }
 void f(){
@@ -25,5 +26,5 @@ void f(){
     digitalWrite(in3,HIGH);
     digitalWrite(in4,LOW);
     analogWrite(ENA,70);
-    analogWrite(ENB,60);    
+    analogWrite(ENB,200);    
 }
