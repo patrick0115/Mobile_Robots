@@ -16,26 +16,31 @@ def main():
     GPIO.setup(touch_L , GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(touch_R , GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(touch_B , GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    rate = rospy.Rate(1) # 10hz
 
     while not rospy.is_shutdown():
         if(GPIO.input(touch_B)==0):
             state=0
-        elif(GPIO.input(touch_L)==1 & GPIO.input(touch_R)==0):
+            print(GPIO.input(touch_R))
+            rospy.sleep(5)
+        elif(GPIO.input(touch_L)==1 and GPIO.input(touch_R)==0 and GPIO.input(touch_B)==1):
             state=1 #turn left
-        elif(GPIO.input(touch_L)==0 & GPIO.input(touch_R)==1):
-           state=2 #turn right
-        elif(GPIO.input(touch_L)==0 & GPIO.input(touch_R)==0):
+            print(GPIO.input(touch_R))
+            rospy.sleep(5)
+        elif(GPIO.input(touch_L)==0 and GPIO.input(touch_R)==1 and GPIO.input(touch_B)==1):
+            state=2 #turn right
+            print(GPIO.input(touch_L))
+            rospy.sleep(5)
+        elif(GPIO.input(touch_L)==0 and GPIO.input(touch_R)==0 and GPIO.input(touch_B)==1):
             state=3 #back
+            rospy.sleep(5)
         else:
             state=4 #forward
         pub.publish(Int16(state))
-        print(GPIO.input(touch_R))
-        print(GPIO.input(touch_L))
-        print(GPIO.input(touch_B))
+
         print(state)
         print('--------------')
-        rate.sleep()
+        rospy.sleep(0.5)
+        
 
 if __name__ == '__main__':
     main()       
