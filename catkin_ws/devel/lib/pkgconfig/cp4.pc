@@ -1,0 +1,8 @@
+prefix=/home/patrick/Mobile_Robots/catkin_ws/devel
+
+Name: cp4
+Description: Description of cp4
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

@@ -72,3 +72,10 @@
 /home/patrick/Mobile_Robots/catkin_ws/build/cp3/CMakeFiles/install/local.dir
 /home/patrick/Mobile_Robots/catkin_ws/build/cp3/CMakeFiles/rebuild_cache.dir
 /home/patrick/Mobile_Robots/catkin_ws/build/cp3/CMakeFiles/install.dir
+/home/patrick/Mobile_Robots/catkin_ws/build/cp4/CMakeFiles/install/strip.dir
+/home/patrick/Mobile_Robots/catkin_ws/build/cp4/CMakeFiles/edit_cache.dir
+/home/patrick/Mobile_Robots/catkin_ws/build/cp4/CMakeFiles/list_install_components.dir
+/home/patrick/Mobile_Robots/catkin_ws/build/cp4/CMakeFiles/test.dir
+/home/patrick/Mobile_Robots/catkin_ws/build/cp4/CMakeFiles/install/local.dir
+/home/patrick/Mobile_Robots/catkin_ws/build/cp4/CMakeFiles/rebuild_cache.dir
+/home/patrick/Mobile_Robots/catkin_ws/build/cp4/CMakeFiles/install.dir
