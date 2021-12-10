@@ -52,8 +52,7 @@ def main():
         else:
             state=4 #forward
             pub.publish(Int16(state))
-        rospy.sleep(0.1)
-    #    rospy.spin() 
+
 def cb_ir(msg_i):
     rospy.loginfo(rospy.get_caller_id() + "ir value is %d", msg_i.data)
 
