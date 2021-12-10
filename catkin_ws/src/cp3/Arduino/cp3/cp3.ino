@@ -18,7 +18,6 @@ int state = 0;
 void cb_r(const std_msgs::Int16& msg) {
   state = msg.data;
 }
-
 ros::Subscriber<std_msgs::Int16> sub("touch", &cb_r);
 
 std_msgs::Int16 light_msg;
