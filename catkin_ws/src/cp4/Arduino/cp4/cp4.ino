@@ -12,7 +12,8 @@ int light_value = 800;
 ros::NodeHandle nh;
 int touch = 0;
 int state = 0;
-
+int light_storage[7];
+int MinNum;
 
 
 
@@ -45,44 +46,58 @@ void loop() {
   if (state == 0) {
     motor(130, 160);
     if (touch == 1 || touch == 2 || touch == 3 ) {
-      state = 2;
+      state = 1;
+      touch_wall();
     }
   }
+  else if (state == 1) {
+    findlight();
+    if (touch == 0 ) {
+      state = 2;
+      touch_wall();
+    }
+  }
+  else if (state == 2) {
+    findlir();
+  }
+  nh.spinOnce();
+}
+int findlir() {
 
-  /*
+}
+int findlight() {
+  for (int i = 0; i < 7; i++) {
+    motor(180, -180);
+    delay(500);
+    motor(0, 0);
+    delay(100);
     light_value = analogRead(light);
     Serial.println(light_value, DEC);
+    light_storage[i] = light_value;
+  }
+  Minlight(light_storage[7]);
+  /*
     light_msg.data = analogRead(light);
     pub_light.publish( &light_msg );
   */
-  if (touch != 4) {
-    if (touch == 2) {
-      motor(130, 80);
-      delay(500);
-    }
-    else if (touch == 1) {
-      motor(80, 130);
-      delay(500);
-    }
-    else if (touch == 3) {
-      motor(-130, -130);
-      delay(500);
-    }
-    else {
-      motor(64, 64);
-      delay(500);
-    }
-
-  }
-  else if (touch == 4) {
-    motor(0, 0);
-    delay(5000);
-  }
-
-
-  nh.spinOnce();
 }
-
+int touch_wall() {
+  motor(0, 0);
+  delay(200);
+  motor(-180, -160);
+  delay(1000);
+}
+int Minlight(int light_storage[7])
+{
+  int num=0;
+  MinNum = light_storage[0];
+  for (int i = 1; i < 7; i++)
+  {
+    if (light_storage[i] < MinNum)
+      MinNum = light_storage[i];
+  }
+  return MinNum;
+}
 
 int motor(int input_value_L, int input_value_R) {
   if (input_value_R >= 0 and input_value_L >= 0) {
