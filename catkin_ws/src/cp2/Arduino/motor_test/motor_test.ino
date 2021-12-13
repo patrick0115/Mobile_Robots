@@ -16,15 +16,49 @@ void setup() {
 }
 
 void loop() {
-  f();
-  delay(10); 
+  motor(-50, -50);
 
 }
-void f(){
-    digitalWrite(in1,HIGH);
-    digitalWrite(in2,LOW);
-    digitalWrite(in3,HIGH);
-    digitalWrite(in4,LOW);
-    analogWrite(ENA,70);
-    analogWrite(ENB,200);    
+int motor(int input_value_L, int input_value_R) {
+  if (input_value_R >= 0 and input_value_L >= 0) {
+    digitalWrite(in1, HIGH);
+    digitalWrite(in2, LOW);
+    digitalWrite(in3, HIGH);
+    digitalWrite(in4, LOW);
+    analogWrite(ENA, input_value_R );
+    analogWrite(ENB, input_value_L);
+  }
+  else if (input_value_R >= 0 and input_value_L <= 0) {
+    digitalWrite(in1, HIGH);
+    digitalWrite(in2, LOW);
+    digitalWrite(in3, LOW);
+    digitalWrite(in4, HIGH);
+    analogWrite(ENA, input_value_R);
+    analogWrite(ENB, abs(input_value_L));
+  }
+  else if (input_value_R <= 0 and input_value_L >= 0) {
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, HIGH);
+    digitalWrite(in3, HIGH);
+    digitalWrite(in4, LOW);
+    analogWrite(ENA, abs(input_value_R));
+    analogWrite(ENB, input_value_L );
+  }
+  else if (input_value_R == 0 and input_value_L == 0) {
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, LOW);
+    digitalWrite(in3, LOW);
+    digitalWrite(in4, LOW);
+    analogWrite(ENA, input_value_R);
+    analogWrite(ENB, input_value_L );
+  }
+  else {
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, HIGH);
+    digitalWrite(in3, LOW);
+    digitalWrite(in4, HIGH);
+    analogWrite(ENA, abs(input_value_R));
+    analogWrite(ENB, abs(input_value_L));
+  }
+
 }

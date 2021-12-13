@@ -18,9 +18,11 @@ int state = 0;
 //light parameter
 int light_value = 0;
 int light_avg = 0;
-int light_count = 0;
 int light_sum = 0;
-int find_light = 600;
+int find_light = 800;
+int light_min = 999999;
+int light_count = 0;
+int light_num = 0;
 
 //ir parameter
 int ir_value = 0;//detect=0 ; not detect = 1024
@@ -57,11 +59,11 @@ void setup() {
 
 void loop() {
   if (state == 0) {
-    motor(130, 160);
+    motor(135, 160);
     if (touch == 1 || touch == 2 || touch == 3 ) {
       touch_wall();
-      rotate_l(1000);
-      go_straight(1000);
+      rotate_l(450);
+      go_straight(2000);
       state = 1;
       touch = 4;
     }
@@ -72,13 +74,16 @@ void loop() {
       touch = 4;
     }
     else if (touch == 4) {
-      rotate_l(1000);
-      go_straight(500);
+      if (light_num == 0) {
+        light_min = 999999;
+      }
       findlight();
+      light_num++;
     }
     else if (touch == 1 || touch == 2 || touch == 3) {
       avoid(touch);
       touch = 4;
+      light_num = 0;
     }
   }
   else if (state == 2) {
@@ -107,6 +112,7 @@ int findlir() {
     if (ir_temp > ir_low && ir_temp < ir_hight) {
       go_straight(1000);
     }
+
     else {
       rotate_r(1000);
       go_straight(1000);
@@ -116,15 +122,18 @@ int findlir() {
 int avoid(int touch) {
   if (touch == 1) {
     touch_wall();
-    rotate_l(1000);
+    rotate_l(400);
+    go_straight(500);
   }
   else if (touch == 2) {
     touch_wall();
-    rotate_r(1000);
+    rotate_r(400);
+    go_straight(500);
   }
   else if (touch == 3) {
     touch_wall();
-    rotate_l(1000);
+    rotate_l(400);
+    go_straight(500);
   }
 }
 int findlight() {
@@ -132,19 +141,27 @@ int findlight() {
     light_msg.data = analogRead(light);
     pub_light.publish( &light_msg );
   */
-  light_value = analogRead(light);
-  Serial.println(light_value, DEC);
-  light_count++;
-  light_sum += light_value;;
-  if (light_count > 30) {
-    light_avg = light_sum / 30;
-    light_count = 0;
-    light_sum = 0;
+  if (light_num <= 7) {
+    rotate_l(210);
+    go_stop(200);
+    light_value = analogRead(light);
+    Serial.println(light_value, DEC);
+    if (light_value < light_min) {
+      light_min = light_value;
+      light_count = light_num;
+    }
   }
-  if (light_avg < find_light) {
-    go_straight(500);
-    find_light -= 20;
+  if (light_num == 7) {
+    go_stop(1000);
+    for (int i = 0; i < light_count; i++) {
+      rotate_l(210);
+      go_stop(200);
+    }
+    go_straight(1000);
+    light_num = 0;
   }
+
+
 }
 
 //move
@@ -153,16 +170,20 @@ int go_straight(int s_time) {
   if (s_time != 0) {
     delay(s_time);
   }
-
+}
+int go_stop(int s_time) {
+  motor(0, 0);
+  delay(s_time);
 }
 
+
 int rotate_l(int l_time) {
-  motor(0, 180);
+  motor(-150, 180);
   delay( l_time);
 }
 
 int rotate_r(int r_time) {
-  motor(180, 0);
+  motor(180, -150);
   delay( r_time);
 }
 
@@ -179,40 +200,40 @@ int motor(int input_value_L, int input_value_R) {
     digitalWrite(in2, LOW);
     digitalWrite(in3, HIGH);
     digitalWrite(in4, LOW);
-    analogWrite(ENA, input_value_L );
-    analogWrite(ENB, input_value_R);
+    analogWrite(ENA, input_value_R );
+    analogWrite(ENB, input_value_L);
   }
   else if (input_value_R >= 0 and input_value_L <= 0) {
     digitalWrite(in1, HIGH);
     digitalWrite(in2, LOW);
     digitalWrite(in3, LOW);
     digitalWrite(in4, HIGH);
-    analogWrite(ENA, input_value_L);
-    analogWrite(ENB, abs(input_value_R));
+    analogWrite(ENA, input_value_R);
+    analogWrite(ENB, abs(input_value_L));
   }
   else if (input_value_R <= 0 and input_value_L >= 0) {
     digitalWrite(in1, LOW);
     digitalWrite(in2, HIGH);
     digitalWrite(in3, HIGH);
     digitalWrite(in4, LOW);
-    analogWrite(ENA, abs(input_value_L));
-    analogWrite(ENB, input_value_R );
+    analogWrite(ENA, abs(input_value_R));
+    analogWrite(ENB, input_value_L );
   }
   else if (input_value_R == 0 and input_value_L == 0) {
     digitalWrite(in1, LOW);
     digitalWrite(in2, LOW);
     digitalWrite(in3, LOW);
     digitalWrite(in4, LOW);
-    analogWrite(ENA, input_value_L);
-    analogWrite(ENB, input_value_R );
+    analogWrite(ENA, input_value_R);
+    analogWrite(ENB, input_value_L );
   }
   else {
     digitalWrite(in1, LOW);
     digitalWrite(in2, HIGH);
     digitalWrite(in3, LOW);
     digitalWrite(in4, HIGH);
-    analogWrite(ENA, input_value_L);
-    analogWrite(ENB, input_value_R);
+    analogWrite(ENA, abs(input_value_R));
+    analogWrite(ENB, abs(input_value_L));
   }
 
 }
