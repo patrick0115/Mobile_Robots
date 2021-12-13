@@ -12,7 +12,7 @@
 ros::NodeHandle nh;
 
 //state
-int touch = 0;
+int touch = 4;
 int state = 0;
 
 //light parameter
@@ -63,11 +63,13 @@ void loop() {
       rotate_l(1000);
       go_straight(1000);
       state = 1;
+      touch = 4;
     }
   }
   else if (state == 1) {
     if (touch == 0 ) {
       state = 2;
+      touch = 4;
     }
     else if (touch == 4) {
       rotate_l(1000);
@@ -76,6 +78,7 @@ void loop() {
     }
     else if (touch == 1 || touch == 2 || touch == 3) {
       avoid(touch);
+      touch = 4;
     }
   }
   else if (state == 2) {
@@ -86,9 +89,9 @@ void loop() {
     }
     else if (touch == 1 || touch == 2 || touch == 3) {
       avoid(touch);
+      touch = 4;
     }
   }
-  touch = 4;
   nh.spinOnce();
 }
 int findlir() {
@@ -131,14 +134,14 @@ int findlight() {
   */
   light_value = analogRead(light);
   Serial.println(light_value, DEC);
-  light_count += light_value;
-  light_sum;
+  light_count++;
+  light_sum += light_value;;
   if (light_count > 30) {
     light_avg = light_sum / 30;
     light_count = 0;
     light_sum = 0;
   }
-  if (light_value < find_light) {
+  if (light_avg < find_light) {
     go_straight(500);
     find_light -= 20;
   }
