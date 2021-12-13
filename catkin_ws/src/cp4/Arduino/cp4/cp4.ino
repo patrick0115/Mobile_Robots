@@ -8,14 +8,13 @@ const int light = A0;
 #define in4 7
 #define ENA 10
 #define ENB 11
-int light_value = 800;
 ros::NodeHandle nh;
+int light_value = 0;
+int light_count = 0;
+int light_sum = 0;
+int find_light = 600;
 int touch = 0;
 int state = 0;
-int light_storage[7];
-int MinNum;
-
-
 
 void cb_r(const std_msgs::Int16& msg) {
   touch = msg.data;
@@ -46,57 +45,66 @@ void loop() {
   if (state == 0) {
     motor(130, 160);
     if (touch == 1 || touch == 2 || touch == 3 ) {
-      state = 1;
       touch_wall();
+      rotate_l(1000);
+      go_straight(1000)
+      state = 1;
     }
   }
   else if (state == 1) {
-    findlight();
     if (touch == 0 ) {
       state = 2;
       touch_wall();
+    }
+    else if (touch == 4) {
+      findlight();
+    }
+    else if (touch == 1||touch == 2||touch == 3) {
+      findlight();
     }
   }
   else if (state == 2) {
     findlir();
   }
+  touch = 4;
   nh.spinOnce();
 }
 int findlir() {
 
 }
 int findlight() {
-  for (int i = 0; i < 7; i++) {
-    motor(180, -180);
-    delay(500);
-    motor(0, 0);
-    delay(100);
-    light_value = analogRead(light);
-    Serial.println(light_value, DEC);
-    light_storage[i] = light_value;
-  }
-  Minlight(light_storage[7]);
+  light_value = analogRead(light);
+  Serial.println(light_value, DEC);
+  light_count++;
+  light_sum;
+
   /*
     light_msg.data = analogRead(light);
     pub_light.publish( &light_msg );
   */
 }
+
+//move
+int go_straight(int s_time) {
+  motor(180, 180);
+  delay(s_time);
+}
+
+int rotate_l(int l_time) {
+  motor(0, 180);
+  delay( l_time);
+}
+
+int rotate_r(int r_time) {
+  motor(180, 0);
+  delay( r_time);
+}
+
 int touch_wall() {
   motor(0, 0);
   delay(200);
   motor(-180, -160);
   delay(1000);
-}
-int Minlight(int light_storage[7])
-{
-  int num=0;
-  MinNum = light_storage[0];
-  for (int i = 1; i < 7; i++)
-  {
-    if (light_storage[i] < MinNum)
-      MinNum = light_storage[i];
-  }
-  return MinNum;
 }
 
 int motor(int input_value_L, int input_value_R) {
