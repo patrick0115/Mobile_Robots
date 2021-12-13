@@ -9,14 +9,15 @@ const int light = A0;
 #define ENA 10
 #define ENB 11
 int light_value = 800;
-
-ros::NodeHandle nh;  //manages an internal reference count
-
+ros::NodeHandle nh;
+int touch = 0;
 int state = 0;
 
 
+
+
 void cb_r(const std_msgs::Int16& msg) {
-  state = msg.data;
+  touch = msg.data;
 }
 
 ros::Subscriber<std_msgs::Int16> sub("touch", &cb_r);
@@ -41,23 +42,29 @@ void setup() {
 }
 
 void loop() {
-  motor(0, 0);
-/*
-  light_value = analogRead(light);
-  Serial.println(light_value, DEC);
-  light_msg.data = analogRead(light);
-  pub_light.publish( &light_msg );
-*/
-  if (state != 4) {
-    if (state == 2) {
+  if (state == 0) {
+    motor(130, 160);
+    if (touch == 1 || touch == 2 || touch == 3 ) {
+      state = 2;
+    }
+  }
+
+  /*
+    light_value = analogRead(light);
+    Serial.println(light_value, DEC);
+    light_msg.data = analogRead(light);
+    pub_light.publish( &light_msg );
+  */
+  if (touch != 4) {
+    if (touch == 2) {
       motor(130, 80);
       delay(500);
     }
-    else if (state == 1) {
+    else if (touch == 1) {
       motor(80, 130);
       delay(500);
     }
-    else if (state == 3) {
+    else if (touch == 3) {
       motor(-130, -130);
       delay(500);
     }
@@ -67,7 +74,7 @@ void loop() {
     }
 
   }
-  else if (state == 4) {
+  else if (touch == 4) {
     motor(0, 0);
     delay(5000);
   }
