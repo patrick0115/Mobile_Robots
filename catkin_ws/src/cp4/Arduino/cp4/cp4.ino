@@ -1,12 +1,16 @@
 #include <ros.h>
 #include <std_msgs/Int16.h>
 
+//L298N
+//in1 in2 ENA is right
+//in3 in4 ENB is right
 #define in1 4
 #define in2 5
 #define in3 6
 #define in4 7
 #define ENA 10
 #define ENB 11
+//sensor
 #define light  A0
 #define ir  A1
 ros::NodeHandle nh;
@@ -32,7 +36,7 @@ int ir_num1 = 0;
 int ir_num2 = 0;
 int ir_temp = 0;
 
-
+//ROS
 void cb_r(const std_msgs::Int16& msg) {
   touch = msg.data;
 }
@@ -41,12 +45,12 @@ ros::Subscriber<std_msgs::Int16> sub("touch", &cb_r);
 std_msgs::Int16 light_msg;
 ros::Publisher pub_light("light_value", &light_msg);
 
-
 void setup() {
   Serial.begin(57600);
   nh.initNode();
   nh.subscribe(sub);
   nh.advertise(pub_light);
+  pinMode(ir, INPUT);
   pinMode(light, INPUT);
   pinMode(OUTPUT, in1);
   pinMode(OUTPUT, in2);
@@ -88,8 +92,6 @@ void loop() {
   }
   else if (state == 2) {
     if (touch == 4) {
-      rotate_r(1000);
-      go_straight(500);
       findlir();
     }
     else if (touch == 1 || touch == 2 || touch == 3) {
@@ -110,12 +112,11 @@ int findlir() {
     ir_num2 = 0;
     ir_num1 = 0;
     if (ir_temp > ir_low && ir_temp < ir_hight) {
-      go_straight(1000);
+      go_straight(500);
     }
-
     else {
-      rotate_r(1000);
-      go_straight(1000);
+      rotate_r(100);
+      go_straight(200);
     }
   }
 }
