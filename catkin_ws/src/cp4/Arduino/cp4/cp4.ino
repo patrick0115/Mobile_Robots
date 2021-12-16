@@ -15,6 +15,7 @@
 #define ir  A1
 ros::NodeHandle nh;
 
+int countir = 0;
 //state
 int touch = 4;
 int state = 0;
@@ -62,20 +63,25 @@ void setup() {
 }
 
 void loop() {
+
   if (state == 0) {
     motor(135, 160);
     if (touch == 1 || touch == 2 || touch == 3 ) {
       touch_wall();
-      rotate_l(450);
-      go_straight(2000);
+      rotate_l(500);
+      go_straight(2300);
       state = 1;
       touch = 4;
     }
   }
   else if (state == 1) {
     if (touch == 0 ) {
+      go_stop(200);
+      rotate_r(400);
+      go_straight(800);
       state = 2;
       touch = 4;
+
     }
     else if (touch == 4) {
       if (light_num == 0) {
@@ -93,17 +99,26 @@ void loop() {
   else if (state == 2) {
     if (touch == 4) {
       findlir();
+      state = 2;
     }
     else if (touch == 1 || touch == 2 || touch == 3) {
       avoid(touch);
       touch = 4;
+      state = 2;
     }
   }
   nh.spinOnce();
 }
 int findlir() {
+  /*
+    rotate_l(100);
+    go_stop(200);
+    go_straight(400);
+  */
   ir_value = analogRead(ir);
   ir_num1++;
+  countir++;
+  Serial.println(countir);
   if (ir_value < 512) {
     ir_num2++;
   }
@@ -111,12 +126,14 @@ int findlir() {
     ir_temp = ir_num2;
     ir_num2 = 0;
     ir_num1 = 0;
+    Serial.println(ir_temp, DEC);
     if (ir_temp > ir_low && ir_temp < ir_hight) {
-      go_straight(500);
+      go_straight(700);
     }
     else {
-      rotate_r(100);
-      go_straight(200);
+      rotate_l(100);
+      go_stop(200);
+      go_straight(300);
     }
   }
 }
@@ -143,7 +160,7 @@ int findlight() {
     pub_light.publish( &light_msg );
   */
   if (light_num <= 7) {
-    rotate_l(210);
+    rotate_l(280);
     go_stop(200);
     light_value = analogRead(light);
     Serial.println(light_value, DEC);
@@ -154,8 +171,8 @@ int findlight() {
   }
   if (light_num == 7) {
     go_stop(1000);
-    for (int i = 0; i < light_count; i++) {
-      rotate_l(210);
+    for (int i = 0; i < (8 - light_count) % 8; i++) {
+      rotate_r(280);
       go_stop(200);
     }
     go_straight(1000);
@@ -167,7 +184,7 @@ int findlight() {
 
 //move
 int go_straight(int s_time) {
-  motor(180, 180);
+  motor(170, 180);
   if (s_time != 0) {
     delay(s_time);
   }
@@ -192,7 +209,7 @@ int touch_wall() {
   motor(0, 0);
   delay(200);
   motor(-180, -160);
-  delay(1000);
+  delay(900);
 }
 
 int motor(int input_value_L, int input_value_R) {
