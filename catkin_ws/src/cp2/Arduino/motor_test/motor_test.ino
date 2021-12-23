@@ -16,7 +16,7 @@ void setup() {
 }
 
 void loop() {
-  motor(-50, -50);
+  motor(150, 150);
 
 }
 int motor(int input_value_L, int input_value_R) {

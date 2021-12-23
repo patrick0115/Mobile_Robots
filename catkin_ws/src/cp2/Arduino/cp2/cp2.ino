@@ -8,26 +8,19 @@
 #define ENA 10
 #define ENB 11
 
-ros::NodeHandle nh;  //manages an internal reference count
+ros::NodeHandle nh; 
 
-int input_value_R=0;
-int input_value_L=0;
+int dir = 0;
 
-void cb_r(const std_msgs::Int16& msg){
-  input_value_R = msg.data;
-}
-void cb_l(const std_msgs::Int16& msg){
-  input_value_L = msg.data;
+void cb(const std_msgs::Int16& msg) {
+  dir= msg.data;
 }
 
-ros::Subscriber<std_msgs::Int16> sub_R("pwm_value_R", &cb_r);
-ros::Subscriber<std_msgs::Int16> sub_L("pwm_value_L", &cb_l);
-
+ros::Subscriber<std_msgs::Int16> sub("dir_value", &cb);
 
 void setup() {
   nh.initNode();
-  nh.subscribe(sub_R);
-  nh.subscribe(sub_L);
+  nh.subscribe(sub);
   pinMode(OUTPUT, in1);
   pinMode(OUTPUT, in2);
   pinMode(OUTPUT, in3);
@@ -38,45 +31,61 @@ void setup() {
 }
 
 void loop() {
-  if(input_value_R >=0 and input_value_L >= 0){
-    digitalWrite(in1,HIGH);
-    digitalWrite(in2,LOW);
-    digitalWrite(in3,HIGH);
-    digitalWrite(in4,LOW);
-    analogWrite(ENA,input_value_L );
-    analogWrite(ENB,input_value_R);
+  if (dir==2) {
+    motor(150, 150);
   }
-  else if(input_value_R >=0 and input_value_L <= 0){
-    digitalWrite(in1,HIGH);
-    digitalWrite(in2,LOW);
-    digitalWrite(in3,LOW);
-    digitalWrite(in4,HIGH);
-    analogWrite(ENA,input_value_L);
-    analogWrite(ENB,abs(input_value_R));
+  else if (dir==1) {
+    motor(150,100);
   }
-  else if(input_value_R <=0 and input_value_L >= 0){
-    digitalWrite(in1,LOW);
-    digitalWrite(in2,HIGH);
-    digitalWrite(in3,HIGH);
-    digitalWrite(in4,LOW);
-    analogWrite(ENA,abs(input_value_L));
-    analogWrite(ENB,input_value_R );
+  else if (dir==3) {
+    motor(100,140);
   }
-  else if(input_value_R ==0 and input_value_L == 0){
-    digitalWrite(in1,LOW);
-    digitalWrite(in2,LOW);
-    digitalWrite(in3,LOW);
-    digitalWrite(in4,LOW);
-    analogWrite(ENA,input_value_R);
-    analogWrite(ENB,input_value_L );
+  else if (dir==4) {
+    motor(0,0);
+  }
+  nh.spinOnce();
+}
+
+int motor(int input_value_L, int input_value_R) {
+  if (input_value_R >= 0 and input_value_L >= 0) {
+    digitalWrite(in1, HIGH);
+    digitalWrite(in2, LOW);
+    digitalWrite(in3, HIGH);
+    digitalWrite(in4, LOW);
+    analogWrite(ENA, input_value_L );
+    analogWrite(ENB, input_value_R);
+  }
+  else if (input_value_R >= 0 and input_value_L <= 0) {
+    digitalWrite(in1, HIGH);
+    digitalWrite(in2, LOW);
+    digitalWrite(in3, LOW);
+    digitalWrite(in4, HIGH);
+    analogWrite(ENA, input_value_L);
+    analogWrite(ENB, abs(input_value_R));
+  }
+  else if (input_value_R <= 0 and input_value_L >= 0) {
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, HIGH);
+    digitalWrite(in3, HIGH);
+    digitalWrite(in4, LOW);
+    analogWrite(ENA, abs(input_value_L));
+    analogWrite(ENB, input_value_R );
+  }
+  else if (input_value_R == 0 and input_value_L == 0) {
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, LOW);
+    digitalWrite(in3, LOW);
+    digitalWrite(in4, LOW);
+    analogWrite(ENA, input_value_L);
+    analogWrite(ENB, input_value_R );
   }
   else {
-    digitalWrite(in1,LOW);
-    digitalWrite(in2,HIGH);
-    digitalWrite(in3,LOW);
-    digitalWrite(in4,HIGH);
-    analogWrite(ENA,input_value_L);
-    analogWrite(ENB,input_value_R);
-  }  
-  nh.spinOnce();
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, HIGH);
+    digitalWrite(in3, LOW);
+    digitalWrite(in4, HIGH);
+    analogWrite(ENA, input_value_L);
+    analogWrite(ENB, input_value_R);
+  }
+
 }
